@@ -6,17 +6,16 @@ const initialGameBoard = [
   [null, null, null]
 ];
 
-console.log(initialGameBoard);
-
-function GameBoard() {
+function GameBoard({onSelectCell, activePlayerSymbol}) {
   const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
   function handleUpdateGameBoard(rowIndex, cellIndex) {
     setGameBoard((prevGameBoard) => {
       const updateGameBoard = [...prevGameBoard.map(innerArray => [...innerArray])];          
-      updateGameBoard[rowIndex][cellIndex] = "X";      
+      updateGameBoard[rowIndex][cellIndex] = activePlayerSymbol;      
       return updateGameBoard;   
-    });    
+    }); 
+    onSelectCell();   
   }
     
 
