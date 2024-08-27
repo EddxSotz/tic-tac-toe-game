@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Player({ initialPlayerName, symbol, isActive }) {
+function Player({ initialPlayerName, symbol, isActive, onNameChange }) {
   const [currentEditState, setEditState] = useState(false);
   const [updatedPlayerName, setPlayerName] = useState(initialPlayerName);
 
@@ -10,6 +10,7 @@ function Player({ initialPlayerName, symbol, isActive }) {
 
   const handlePlayerNameChange = (event) => {
     setPlayerName(event.target.value);
+    currentEditState && onNameChange(symbol, updatedPlayerName);
   };
 
   return (

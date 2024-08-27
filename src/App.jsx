@@ -12,6 +12,8 @@ const initialGameBoard = [
   [null, null, null]
 ];
 
+const initialPlayers = { X: 'Player 1', O: 'Player 2'};
+
 function deriveActivePlayer(turns) {
   let currentPlayer = 'X';
   if (turns.length > 0 && turns[0].player === 'X') {
@@ -20,18 +22,8 @@ function deriveActivePlayer(turns) {
   return currentPlayer;
 }
 
-function App() {  
-  const [gameTurns, setGameTurns] = useState([]);
-  const currentPlayer = deriveActivePlayer(gameTurns);
-  let gameBoard = initialGameBoard;
+function deriveWinner(gameBoard, players) {
   let winner = null;
-
-  for (const turn of gameTurns) {
-    const {square, player} = turn;
-    const {row, col} = square;
-    gameBoard [row][col] = player;
-  }
-
   for (const combination of WINNING_COMBINATIONS) {
     const [a, b, c] = combination;
     const aVal = gameBoard[a.row][a.column];
@@ -39,11 +31,30 @@ function App() {
     const cVal = gameBoard[c.row][c.column];
 
     if (aVal && aVal === bVal && aVal === cVal) {
-      winner = aVal;      
+      winner = players[aVal]; 
     }
   }
+  return winner;
+}
 
-  const isDraw = gameTurns.length === 9 && !winner;
+function deriveGameBoard(gameTurns) {
+  let gameBoard = [...initialGameBoard.map( array => [...array])];
+  for (const turn of gameTurns) {
+    const {square, player} = turn;
+    const {row, col} = square;
+    gameBoard [row][col] = player;
+  }
+  return gameBoard;
+}
+
+function App() {
+  const [players, setPlayers] = useState(initialPlayers);
+    
+  const [gameTurns, setGameTurns] = useState([]);
+  const currentPlayer = deriveActivePlayer(gameTurns);
+  const gameBoard = deriveGameBoard(gameTurns);
+  const winner = deriveWinner(gameBoard, players);  
+  let isDraw = gameTurns.length === 9 && !winner;
   
   function handlePlayerChange(rowIndex, cellIndex) {
     setGameTurns((previousTurns) => {
@@ -56,15 +67,25 @@ function App() {
   );
   }
 
+  function restartGame() {    
+    setGameTurns([]);
+  }
+
+  function handlePlayerNameChange(playerSymbol, playerName) {
+    setPlayers((previousPlayers) => {      
+      return {...previousPlayers, [playerSymbol]: playerName};
+    });
+  }
+
   return (
     <main>
       <h1>React Tic-Tac-Toe</h1>
       <div id="game-container">
         <ol id="players" className='highlight-player'>
-          <Player initialPlayerName='Player 1' symbol='X' isActive={currentPlayer==='X'}/> 
-          <Player initialPlayerName='Player 2' symbol='O' isActive={currentPlayer==='O'}/>        
+          <Player initialPlayerName={initialPlayers.X} symbol='X' isActive={currentPlayer==='X'} onNameChange={handlePlayerNameChange}/> 
+          <Player initialPlayerName={initialPlayers.O} symbol='O' isActive={currentPlayer==='O'} onNameChange={handlePlayerNameChange} />        
         </ol>
-        {(winner || isDraw) && <GameOver winner={winner} />}
+        {(winner || isDraw) && <GameOver winner={winner} onRestart={restartGame}/>}
         <GameBoard onSelectCell={handlePlayerChange} board={gameBoard}/>
         <p>Game Board</p>
       </div>

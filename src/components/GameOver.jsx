@@ -1,5 +1,5 @@
 
-function GameOver({ winner }) {
+function GameOver({ winner, onRestart }) {
 
   return (
     <div id="game-over">
@@ -9,7 +9,7 @@ function GameOver({ winner }) {
         <p>It's a draw!</p>
         )
       }
-      <button>Restart</button>
+      <button onClick={onRestart}>Restart</button>
     </div>
   );
 }
