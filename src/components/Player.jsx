@@ -2,15 +2,15 @@ import { useState } from "react";
 
 function Player({ initialPlayerName, symbol, isActive, onNameChange }) {
   const [currentEditState, setEditState] = useState(false);
-  const [updatedPlayerName, setPlayerName] = useState(initialPlayerName);
+  const [updatedPlayerName, setPlayerName] = useState(initialPlayerName); 
 
   const editClickEvent = () => {
     setEditState((updateState) => !updateState);
+    onNameChange(symbol, updatedPlayerName);
   };
 
   const handlePlayerNameChange = (event) => {
-    setPlayerName(event.target.value);
-    currentEditState && onNameChange(symbol, updatedPlayerName);
+    setPlayerName(event.target.value);    
   };
 
   return (
@@ -29,7 +29,7 @@ function Player({ initialPlayerName, symbol, isActive, onNameChange }) {
       </span>
       <button onClick={editClickEvent}>
         {currentEditState ? "Save" : "Edit"}
-      </button>
+      </button>      
     </li>
   );
 }
