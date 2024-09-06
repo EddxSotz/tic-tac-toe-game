@@ -31,10 +31,11 @@ function deriveWinner(gameBoard, players) {
     const cVal = gameBoard[c.row][c.column];
 
     if (aVal && aVal === bVal && aVal === cVal) {
-      winner = players[aVal]; 
+      winner = players[aVal];
+      console.log('winner is:' + winner);
     }
   }
-  return winner;
+  return winner;  
 }
 
 function deriveGameBoard(gameTurns) {
@@ -55,7 +56,7 @@ function App() {
   const gameBoard = deriveGameBoard(gameTurns);
   const winner = deriveWinner(gameBoard, players);  
   let isDraw = gameTurns.length === 9 && !winner;
-  
+
   function handlePlayerChange(rowIndex, cellIndex) {
     setGameTurns((previousTurns) => {
       const currentPlayer = deriveActivePlayer(previousTurns);    
@@ -71,10 +72,10 @@ function App() {
     setGameTurns([]);
   }
 
-  function handlePlayerNameChange(playerSymbol, playerName) {
+  function handlePlayerNameChange(playerSymbol, playerName) {    
     setPlayers((previousPlayers) => {      
       return {...previousPlayers, [playerSymbol]: playerName};
-    });
+    });    
   }
 
   return (
